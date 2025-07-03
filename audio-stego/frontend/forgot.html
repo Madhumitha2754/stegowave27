@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .fade-in {
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Full-Screen Animated Background */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Keep it behind everything */
+    pointer-events: none; /* Prevent user interaction */
+    background: radial-gradient(circle, rgba(10,10,10,1) 40%, rgba(0, 0, 0, 1) 100%);
+}
+    </style>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <h1 class="glitch fade-in">🔒 Reset Password</h1>
+    
+    <form id="resetPasswordForm" class="fade-in">
+        <label for="email">📧 Enter Your Email:</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+        
+        <label for="newPassword">🔑 Enter New Password:</label>
+        <input type="password" id="newPassword" placeholder="Enter new password" required>
+        
+        <button class="btn neon-btn" type="button" onclick="resetPassword()">✅ Reset Password</button>
+    </form>
+
+    <p id="statusMessage" class="fade-in"></p>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const canvas = document.getElementById("backgroundCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let w, h;
+    function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Particle System
+    const particles = [];
+    const shootingStars = [];
+
+    function createParticles(count) {
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                radius: Math.random() * 3 + 1,
+                dx: (Math.random() - 0.5) * 2,
+                dy: (Math.random() - 0.5) * 2,
+                color: `hsl(${Math.random() * 360}, 100%, 70%)`
+            });
+        }
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw and Move Particles
+        particles.forEach((p, index) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.dx;
+            p.y += p.dy;
+
+            if (p.x < 0 || p.x > w) p.dx *= -1;
+            if (p.y < 0 || p.y > h) p.dy *= -1;
+
+            // Neon Lines Between Close Particles
+            for (let j = index + 1; j < particles.length; j++) {
+                let p2 = particles[j];
+                let distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = `rgba(0, 255, 238, ${1 - distance / 100})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        });
+
+        // Shooting Stars
+        if (Math.random() < 0.02) {
+            shootingStars.push({
+                x: Math.random() * w,
+                y: Math.random() * h / 2,
+                speed: Math.random() * 4 + 2
+            });
+        }
+        for (let i = 0; i < shootingStars.length; i++) {
+            let s = shootingStars[i];
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y);
+            ctx.lineTo(s.x + 10, s.y + 10);
+            ctx.strokeStyle = "rgba(255, 255, 0, 0.8)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            s.x += s.speed;
+            s.y += s.speed;
+            if (s.x > w || s.y > h) shootingStars.splice(i, 1);
+        }
+
+        requestAnimationFrame(drawParticles);
+    }
+
+    createParticles(80);
+    drawParticles();
+});
+
+    </script>
+
+    <script>
+        async function resetPassword() {
+            const email = document.getElementById("email").value.trim();
+            const newPassword = document.getElementById("newPassword").value.trim();
+
+            if (!email || !newPassword) {
+                alert("⚠️ Please enter a valid email and a new password.");
+                return;
+            }
+
+            const response = await fetch("http://127.0.0.1:5000/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, newPassword })
+            });
+
+            const result = await response.json();
+            document.getElementById("statusMessage").innerText = result.message || result.error;
+
+            if (response.ok) {
+                alert("✅ Password reset successful! Redirecting to login page...");
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>

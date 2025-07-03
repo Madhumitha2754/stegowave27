@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - StegoWave</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes glowContainer {
+            0% { box-shadow: 0px 0px 10px rgba(0, 255, 238, 0.4); }
+            50% { box-shadow: 0px 0px 25px rgba(0, 255, 238, 0.8); transform: scale(1.02); }
+            100% { box-shadow: 0px 0px 10px rgba(0, 255, 238, 0.4); }
+        }
+
+        @keyframes glowText {
+            0% { text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.6); }
+            50% { text-shadow: 0px 0px 20px rgba(255, 215, 0, 1); }
+            100% { text-shadow: 0px 0px 10px rgba(255, 217, 0, 0.836); }
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #0a0a0a;
+            color: #00ffee;
+            overflow: hidden;
+        }
+        /* Full-Screen Animated Background */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Keep it behind everything */
+    pointer-events: none; /* Prevent user interaction */
+    background: radial-gradient(circle, rgba(10,10,10,1) 40%, rgba(0, 0, 0, 1) 100%);
+}
+
+
+        .signup-container {
+            background: #111;
+            padding: 25px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 1s ease-out, glowContainer 2s infinite alternate;
+        }
+        input {
+            width: 85%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #00ffee;
+            border-radius: 5px;
+            background: #222;
+            color: #00ffee;
+            font-size: 1rem;
+            padding-right: 40px;
+        }
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin: -10x 0;
+        }
+        .input-group .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #00ffee;
+        }
+        button {
+            margin: 20px 0;
+            width: 85%;
+            padding: 12px;
+            background: #00ffee;
+            color: #111;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        button:hover {
+            background: #009999;
+            transform: scale(1.05);
+        }
+        .login-link {
+            margin-top: 10px;
+        }
+        .login-link a {
+            color: #fbff00;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #FFD700;
+            animation: glowText 1.5s infinite alternate;
+        }
+    </style>
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const eyeIcon = document.getElementById("eye-icon");
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.textContent = "👁️";
+            } else {
+                passwordField.type = "password";
+                eyeIcon.textContent = "👁️‍🗨️";
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const canvas = document.getElementById("backgroundCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let w, h;
+    function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Particle System
+    const particles = [];
+    const shootingStars = [];
+
+    function createParticles(count) {
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                radius: Math.random() * 3 + 1,
+                dx: (Math.random() - 0.5) * 2,
+                dy: (Math.random() - 0.5) * 2,
+                color: `hsl(${Math.random() * 360}, 100%, 70%)`
+            });
+        }
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw and Move Particles
+        particles.forEach((p, index) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.dx;
+            p.y += p.dy;
+
+            if (p.x < 0 || p.x > w) p.dx *= -1;
+            if (p.y < 0 || p.y > h) p.dy *= -1;
+
+            // Neon Lines Between Close Particles
+            for (let j = index + 1; j < particles.length; j++) {
+                let p2 = particles[j];
+                let distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = `rgba(0, 255, 238, ${1 - distance / 100})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        });
+
+        // Shooting Stars
+        if (Math.random() < 0.02) {
+            shootingStars.push({
+                x: Math.random() * w,
+                y: Math.random() * h / 2,
+                speed: Math.random() * 4 + 2
+            });
+        }
+        for (let i = 0; i < shootingStars.length; i++) {
+            let s = shootingStars[i];
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y);
+            ctx.lineTo(s.x + 10, s.y + 10);
+            ctx.strokeStyle = "rgba(255, 255, 0, 0.8)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            s.x += s.speed;
+            s.y += s.speed;
+            if (s.x > w || s.y > h) shootingStars.splice(i, 1);
+        }
+
+        requestAnimationFrame(drawParticles);
+    }
+
+    createParticles(80);
+    drawParticles();
+});
+
+    </script>
+    <script>
+           function registerUser() {
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (!username || !email || !password) {
+                alert("All fields are required!");
+                return;
+            }
+
+            fetch("http://127.0.0.1:5000/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert("Signup Successful! Redirecting to Login Page...");
+                    window.location.href = "index.html";
+                } else if (data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    alert("Unexpected response from server.");
+                }
+            })
+            .catch(error => {
+                alert("Failed to connect to the server. Please try again later.");
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <h1>Create Your <span style='color:#00ffee; text-shadow: 0px 0px 10px rgba(0, 255, 238, 0.8);'>StegoWave</span> Account</h1>
+    <div class="signup-container">
+        <h2 style="text-align: center">📝 Signup with StegoWave</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Password" required>
+            <span class="eye-icon" id="eye-icon" onclick="togglePassword()">👁️‍🗨️</span>
+        </div>
+        <button onclick="registerUser()">Signup</button>
+        <p class="login-link">Already have an account? <a href="index.html">Login</a></p>
+    </div>
+</body>
+</html>

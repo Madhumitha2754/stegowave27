@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Steganography Tool</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <nav>
+        <h1 class="glitch">🔊 StegoWave</h1>
+        <ul>
+            <li><a href="how-it-work.html">How It Works</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="encryption.html">Encryption Methods</a></li>
+            <li><a href="support.html">Contact us</a></li>
+        </ul>
+        <button id="themeToggle" class="btn neon-btn">🌙 Toggle Theme</button>
+        <button id="logoutButton" class="btn neon-btn">🚪 Logout</button>
+    </nav>
+
+    <header class="hero">
+        <h2 class="typing-effect">Securely Hide Messages in Audio Files</h2>
+        <p>Advanced Steganography with Encryption & AI-Powered Noise Reduction</p>
+        <div class="drop-area" id="dropArea">
+            <p>Drag & Drop Your Audio File Here</p>
+            <input type="file" id="audioFile" accept="audio/*">
+        </div>
+        <input type="text" id="messageInput" placeholder="Enter your secret message">
+        <label for="algorithmSelect">🔀 Select Algorithm:</label>
+        <select id="algorithmSelect">
+            <option value="lsb">Least Significant Bit (LSB)</option>
+            <option value="phase">Phase Coding</option>
+        </select>
+        <button class="btn neon-btn" id="encodeButton">Encode Message</button>
+        <button class="btn neon-btn" id="decodeButton">Decode Message</button>
+        <p id="statusMessage"></p>
+    </header>
+   
+<!-- How to Use Section -->
+    <section class="how-to-use">
+        <h2>📌 How to Use StegoWave</h2>
+        <p>Follow these simple steps to securely hide and extract messages from audio files.</p>
+        <ol>
+            <li>Select an audio file by dragging and dropping it into the upload area.</li>
+            <li>Enter the secret message you want to embed.</li>
+            <li>Choose the preferred encoding algorithm.</li>
+            <li>Click the "Encode Message" button to process your file.</li>
+            <li>Download the encoded audio file and share it securely.</li>
+            <li>To extract a message, upload the encoded audio file and click "Decode Message."</li>
+        </ol>
+    </section>
+
+    <!-- Security Tips Section -->
+    <section class="security-tips">
+        <h2>🔐 Security Best Practices</h2>
+        <p>Follow these key guidelines to enhance your data privacy and security.</p>
+        <ul>
+            <li>Always use strong encryption methods like AES-256 before embedding messages.</li>
+            <li>Do not share encoded audio files over insecure platforms.</li>
+            <li>Regularly update your steganography tool to avoid vulnerabilities.</li>
+            <li>Use multi-factor authentication (MFA) for added security on sensitive data.</li>
+            <li>Verify encoded messages on a secure system before distribution.</li>
+        </ul>
+    </section>
+
+    <!-- Footer with Icons -->
+    <footer>
+        <p>© 2025 StegoWave. All Rights Reserved.</p>
+        <ul>
+            <li><a href="https://github.com/Madhumitha2754" class="footer-icon"><i class="fab fa-github"></i></a></li>
+            <li><a href="#" class="footer-icon"><i class="fas fa-book"></i></a></li>
+            <li><a href="#" class="footer-icon"><i class="fas fa-code"></i></a></li>
+            <li><a href="#" class="footer-icon"><i class="fas fa-user-shield"></i></a></li>
+        </ul>
+    </footer>
+    <script src="script1.js" defer></script>
+    <script src="background.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "index.html"; // Redirect if not logged in
+        }
+    });
+    </script>
+    <script>
+        document.getElementById("logoutButton").addEventListener("click", function() {
+            localStorage.removeItem("loggedIn"); // Clear login flag
+            sessionStorage.clear(); // Clear session data
+            alert("You have been logged out.");
+            window.location.href = "index.html"; // Redirect to login page
+    
+            // Prevent going back after logout
+            setTimeout(function() {
+                window.history.pushState(null, "", window.location.href);
+                window.onpopstate = function() {
+                    window.history.pushState(null, "", window.location.href);
+                };
+            }, 0);
+        });
+    </script>
+    
+    <script>
+        // Dark/Light Mode Toggle
+        document.getElementById("themeToggle").addEventListener("click", function() {
+            document.body.classList.toggle("light-mode");
+        });
+        document.getElementById("logoutButton").addEventListener("click", function() {
+        localStorage.clear(); // Clear user session data
+        sessionStorage.clear(); // Clear any session data
+        alert("You have been logged out.");
+        window.location.href = "index.html"; // Redirect to login page
+        });
+        
+
+        // Typing Effect for Hero Text
+        document.addEventListener("DOMContentLoaded", function() {
+            const textElement = document.querySelector(".typing-effect");
+            const text = textElement.innerText;
+            textElement.innerText = "";
+            let i = 0;
+            function typeEffect() {
+                if (i < text.length) {
+                    textElement.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeEffect, 100);
+                }
+            }
+            typeEffect();
+        });
+        
+
+        // Scroll-triggered animation
+        document.addEventListener("DOMContentLoaded", function () {
+            const sections = document.querySelectorAll(".how-to-use li, .security-tips li");
+
+            function revealOnScroll() {
+                sections.forEach((section) => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 50) {
+                        section.style.opacity = "1";
+                        section.style.transform = "translateY(0)";
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", revealOnScroll);
+            revealOnScroll();
+        });
+    </script>
+
+</body>
+</html>

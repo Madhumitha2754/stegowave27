@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - StegoWave</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="faq.js" defer></script>
+    <style>
+        /* Cyberpunk-Themed FAQ Page */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0a0a;
+            color: #00ffee;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+         /* Title Animation */
+         h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #FFD700;
+            animation: glowText 2s infinite alternate;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glowText {
+            0% { text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.6); }
+            50% { text-shadow: 0px 0px 20px rgba(255, 215, 0, 1); }
+            100% { text-shadow: 0px 0px 10px rgba(255, 217, 0, 0.836); }
+        }
+
+        /* Full-Screen Animated Background */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Keep it behind everything */
+    pointer-events: none; /* Prevent user interaction */
+    background: radial-gradient(circle, rgba(10,10,10,1) 40%, rgba(0, 0, 0, 1) 100%);
+}
+
+
+        .faq-container {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: left;
+        }
+
+        /* Floating & Hover Effect for FAQ Items */
+        .faq-item {
+            background: rgba(0, 255, 238, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border: 2px solid #00ffee;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            animation: floatEffect 4s infinite alternate ease-in-out;
+        }
+
+        .faq-item:hover {
+            background: rgba(0, 255, 238, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 238, 0.5);
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            display: none;
+            font-size: 16px;
+            margin-top: 10px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .arrow {
+            transition: 0.3s;
+        }
+
+        .rotate {
+            transform: rotate(90deg);
+        }
+
+        /* Glow Animation */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00ffee, 0 0 20px #00ffee;
+            }
+            to {
+                text-shadow: 0 0 20px #00ffee, 0 0 30px #00ffee;
+            }
+        }
+
+        /* Floating Effect */
+        @keyframes floatEffect {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(8px);
+            }
+        }
+
+        /* Slide Down Animation for Answers */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+const canvas = document.getElementById("backgroundCanvas");
+const ctx = canvas.getContext("2d");
+
+let w, h;
+function resizeCanvas() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+// Particle System
+const particles = [];
+const shootingStars = [];
+
+function createParticles(count) {
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            radius: Math.random() * 3 + 1,
+            dx: (Math.random() - 0.5) * 2,
+            dy: (Math.random() - 0.5) * 2,
+            color: `hsl(${Math.random() * 360}, 100%, 70%)`
+        });
+    }
+}
+
+function drawParticles() {
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw and Move Particles
+    particles.forEach((p, index) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
+
+        // Neon Lines Between Close Particles
+        for (let j = index + 1; j < particles.length; j++) {
+            let p2 = particles[j];
+            let distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (distance < 100) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(0, 255, 238, ${1 - distance / 100})`;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+            }
+        }
+    });
+
+    // Shooting Stars
+    if (Math.random() < 0.02) {
+        shootingStars.push({
+            x: Math.random() * w,
+            y: Math.random() * h / 2,
+            speed: Math.random() * 4 + 2
+        });
+    }
+    for (let i = 0; i < shootingStars.length; i++) {
+        let s = shootingStars[i];
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x + 10, s.y + 10);
+        ctx.strokeStyle = "rgba(255, 255, 0, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        s.x += s.speed;
+        s.y += s.speed;
+        if (s.x > w || s.y > h) shootingStars.splice(i, 1);
+    }
+
+    requestAnimationFrame(drawParticles);
+}
+
+createParticles(80);
+drawParticles();
+});
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const faqItems = document.querySelectorAll(".faq-item");
+
+    faqItems.forEach((item) => {
+        item.addEventListener("click", function () {
+            const answer = item.querySelector(".faq-answer");
+            const arrow = item.querySelector(".arrow");
+
+            if (answer.style.display === "block") {
+                answer.style.opacity = "0";
+                answer.style.transform = "translateY(-10px)";
+                setTimeout(() => { answer.style.display = "none"; }, 300);
+                arrow.classList.remove("rotate");
+            } else {
+                answer.style.display = "block";
+                answer.style.animation = "slideDown 0.5s ease";
+                setTimeout(() => {
+                    answer.style.opacity = "1";
+                    answer.style.transform = "translateY(0px)";
+                }, 10);
+                arrow.classList.add("rotate");
+            }
+        });
+    });
+});
+
+</script>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <nav>
+        <h1 class="glitch">🔊 StegoWave</h1>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="support.html">Contact us </a></li>
+        </ul>
+    </nav>
+    <h2>Frequently Asked Questions</h1>
+    <div class="faq-container">
+        
+        <!-- FAQ List (50 Questions & Answers) -->
+        
+        <div class="faq-item">
+            <div class="faq-question">What is StegoWave? <span class="arrow">➤</span></div>
+            <div class="faq-answer">StegoWave is a powerful tool that lets you hide secret messages inside audio files using advanced steganography techniques.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">How does StegoWave work? <span class="arrow">➤</span></div>
+            <div class="faq-answer">It modifies specific parts of the audio signal to embed a hidden message while keeping the sound nearly unchanged.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Who can use StegoWave? <span class="arrow">➤</span></div>
+            <div class="faq-answer">Anyone! It’s designed for security enthusiasts, researchers, and anyone who wants private communication.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is StegoWave legal to use? <span class="arrow">➤</span></div>
+            <div class="faq-answer">Yes, steganography is legal, but it’s your responsibility to use it ethically and lawfully.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is StegoWave open-source? <span class="arrow">➤</span></div>
+            <div class="faq-answer">Yes! StegoWave is an open-source project, meaning you can view, modify, and contribute to the code.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">What audio formats does StegoWave support? <span class="arrow">➤</span></div>
+            <div class="faq-answer">StegoWave currently supports WAV and MP3 files.</div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">Can I use StegoWave on mobile devices? <span class="arrow">➤</span></div>
+            <div class="faq-answer">Currently, StegoWave works best on desktop browsers. A mobile-friendly version is in development.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Does StegoWave require an internet connection? <span class="arrow">➤</span></div>
+            <div class="faq-answer">No! StegoWave can work offline, ensuring complete privacy.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is there a file size limit for encoding? <span class="arrow">➤</span></div>
+            <div class="faq-answer">Yes, large files may take longer to process. For best performance, use audio files under 10 MB.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Can I encode multiple messages in one file? <span class="arrow">➤</span></div>
+            <div class="faq-answer">No, StegoWave supports one message per file.</div>
+        </div>
+        
+    </div>
+</body>
+<footer>
+    <p>© 2025 StegoWave. All Rights Reserved.</p>
+</footer>
+
+</html>

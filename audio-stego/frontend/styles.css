@@ -1,0 +1,336 @@
+/* Cyberpunk Themed Styles for StegoWave */
+body {
+    background-color: #0a0a0a;
+    color: #00ffee;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+/* Light Mode Theme */
+.light-mode {
+    background-color: #f4f4f4;
+    color: #111;
+}
+
+.light-mode nav, 
+.light-mode .hero, 
+.light-mode .how-to-use, 
+.light-mode .security-tips, 
+.light-mode footer {
+    background: #ffffff;
+    color: #111;
+    border-color: #009999;
+    box-shadow: 0 0 15px rgba(0, 153, 153, 0.3);
+}
+/* Glitching StegoWave Logo */
+@keyframes glitch {
+    0% { transform: skewX(0deg); text-shadow: 0 0 5px #00ffee, 0 0 10px #009999; }
+    20% { transform: skewX(-10deg) scale(1.05); text-shadow: -5px -5px 10px #ff00ff, 5px 5px 10px #00ffee; }
+    40% { transform: skewX(5deg) scale(1.1); text-shadow: 5px -5px 10px #ff00ff, -5px 5px 10px #00ffee; }
+    60% { transform: skewX(-3deg) scale(1.05); text-shadow: -3px -3px 10px #ff00ff, 3px 3px 10px #00ffee; }
+    80% { transform: skewX(2deg) scale(1); text-shadow: 3px -3px 10px #ff00ff, -3px 3px 10px #00ffee; }
+    100% { transform: skewX(0deg); text-shadow: 0 0 5px #00ffee, 0 0 10px #009999; }
+}
+
+.glitch {
+    font-size: 32px;
+    font-weight: bold;
+    color: #00ffee;
+    display: inline-block;
+    position: relative;
+    animation: glitch 1.5s infinite alternate;
+    transform-style: preserve-3d;
+    text-shadow: 0px 5px 15px rgba(0, 255, 238, 0.7);
+}
+
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px; /* Adjusted padding for better spacing */
+    background: #111;
+    border-bottom: 3px solid #00ffee;
+    box-shadow: 0 4px 10px rgba(0, 255, 238, 0.2);
+}
+
+/* Navigation Links */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px; /* Reduced spacing for a tighter layout */
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    list-style: none;
+}
+
+/* Navigation Links Styling */
+nav ul li a {
+    color: #00ffee;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px; /* Reduced font size for better spacing */
+    transition: 0.3s;
+    padding: 8px 12px; /* Adjusted padding for compact look */
+    border-radius: 5px;
+}
+
+/* Navigation Hover Effect */
+nav ul li a:hover {
+    color: #009999;
+    text-shadow: 0 0 8px #00ffee;
+    background: rgba(0, 255, 238, 0.1);
+    border-radius: 5px;
+}
+
+/* Responsive Navbar (Mobile View) */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px; /* Adjusted for mobile layout */
+    }
+}
+
+.hero {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #111, #222);
+    border-bottom: 4px solid #00ffee;
+    box-shadow: 0 0 15px rgba(0, 255, 238, 0.2);
+}
+
+.drop-area {
+    border: 3px dashed #00ffee;
+    padding: 25px;
+    margin: 20px auto;
+    width: 60%;
+    text-align: center;
+    background: rgba(0, 255, 238, 0.1);
+    transition: 0.3s;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.drop-area:hover {
+    background: rgba(0, 255, 238, 0.3);
+    transform: scale(1.02);
+}
+
+
+/* Cyberpunk Button */
+.btn {
+    background-color: #00ffee;
+    color: #111;
+    border: none;
+    padding: 10px 20px;  /* Adjusted padding for smaller size */
+    cursor: pointer;
+    font-size: 16px;  /* Reduced font size */
+    margin: 8px;
+    border-radius: 8px;
+    transition: 0.3s;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 255, 238, 0.2);
+    min-width: 120px;  /* Sets a reasonable width */
+    max-width: 160px;  /* Prevents it from getting too large */
+    text-align: center;
+}
+
+/* Hover Effect */
+.btn:hover {
+    background-color: #009999;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 255, 238, 0.4);
+}
+/* Full-Screen Animated Background */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Keep it behind everything */
+    pointer-events: none; /* Prevent user interaction */
+    background: radial-gradient(circle, rgba(10,10,10,1) 40%, rgba(0, 0, 0, 1) 100%);
+}
+/* Profile Popup */
+.profile-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    color: #00ffee;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 255, 238, 0.5);
+    width: 320px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Profile Image Upload */
+.profile-image-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 15px;
+}
+
+.profile-image-container label {
+    cursor: pointer;
+}
+
+.profile-image-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #00ffee;
+    box-shadow: 0px 0px 15px rgba(0, 255, 238, 0.7);
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-image-container label:hover img {
+    transform: scale(1.05);
+}
+
+/* Hide Default File Input */
+.profile-image-container input {
+    display: none;
+}
+
+/* Profile Fields */
+.profile-fields {
+    width: 80%;  /* Adjusted width for better alignment */
+    text-align: left;
+}
+
+.profile-fields label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #00ffee;
+}
+
+.profile-fields input {
+    width: 90%;  /* Reduce input box length */
+    max-width: 250px;  /* Ensures it doesn't get too wide */
+    padding: 8px;
+    background: #222;
+    color: #00ffee;
+    border: 1px solid #00ffee;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+
+/* Logout Button */
+#logoutProfile {
+    background-color: #ff0066;
+    margin-top: 10px;
+}
+
+#logoutProfile:hover {
+    background-color: #cc0055;
+}
+
+/* 3D Animation for how-to-use and security-tips */
+@keyframes fadeIn3D {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9) rotateX(10deg);
+        box-shadow: 0px 0px 0px rgba(0, 255, 238, 0.3);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0deg);
+        box-shadow: 0px 10px 30px rgba(0, 255, 238, 0.4);
+    }
+}
+
+.how-to-use, .security-tips {
+    padding: 40px;
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    background: #111;
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0, 255, 238, 0.15);
+    margin-top: 30px;
+    animation: fadeIn3D 1s ease-in-out;
+    perspective: 1000px;
+    transform-origin: center;
+    transition: transform 0.4s, box-shadow 0.4s;
+}
+
+/* Hover effect for extra 3D depth */
+.how-to-use:hover, .security-tips:hover {
+    transform: translateY(-5px) scale(1.05) rotateX(5deg);
+    box-shadow: 0px 15px 40px rgba(0, 255, 238, 0.5);
+}
+
+.how-to-use h2, .security-tips h2 {
+    color: #00ffee;
+    text-align: center;
+}
+
+.how-to-use ol, .security-tips ul {
+    padding-left: 20px;
+}
+
+.how-to-use li, .security-tips li {
+    margin-bottom: 10px;
+    list-style: disc;
+    color: #00ffee;
+}
+
+footer {
+    margin-top: 25px;
+    padding: 20px;
+    background: #111;
+    border-top: 3px solid #00ffee;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 -4px 10px rgba(0, 255, 238, 0.2);
+}
+/* Footer Icons */
+.footer-icon {
+    font-size: 24px;
+    color: #00ffee;
+    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.footer-icon:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #00ffee, 0 0 20px #009999;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+

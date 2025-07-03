@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption Methods - StegoWave</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #0a0a0a;
+            color: #00ffee;
+            overflow-x: hidden;
+        }
+        
+        /* Title Animation */
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #FFD700;
+            animation: glowText 2s infinite alternate;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glowText {
+            0% { text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.6); }
+            50% { text-shadow: 0px 0px 20px rgba(255, 215, 0, 1); }
+            100% { text-shadow: 0px 0px 10px rgba(255, 217, 0, 0.836); }
+        }
+        /* Full-Screen Animated Background */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Keep it behind everything */
+    pointer-events: none; /* Prevent user interaction */
+    background: radial-gradient(circle, rgba(10,10,10,1) 40%, rgba(0, 0, 0, 1) 100%);
+}
+
+
+
+        .encryption-container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .encryption-box {
+            width: 350px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #111;
+            box-shadow: 0px 0px 10px rgba(0, 255, 238, 0.5);
+            text-align: center;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .encryption-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 20px rgba(0, 255, 238, 0.9);
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .encryption-box i {
+            font-size: 2rem;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+
+    <nav>
+        <h1 class="glitch">🔊 StegoWave</h1>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="support.html">Contact us </a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h2>🔐 Encryption Methods Used in StegoWave</h2>
+        <p>Explore the encryption techniques used for secure data hiding.</p>
+    </header>
+
+    <div class="encryption-container">
+        <div class="encryption-box">
+            <i class="fas fa-lock"></i>
+            <h3>🛡 AES-256 Encryption</h3>
+            <p>Advanced Encryption Standard (AES-256) ensures end-to-end encryption before hiding messages inside audio files.</p>
+        </div>
+
+        <div class="encryption-box">
+            <i class="fas fa-soundwave"></i>
+            <h3>🎧 Least Significant Bit (LSB) Encoding</h3>
+            <p>LSB encoding modifies the least significant bits of an audio file to hide messages without altering sound quality.</p>
+        </div>
+
+        <div class="encryption-box">
+            <i class="fas fa-wave-square"></i>
+            <h3>🔊 Phase Coding Steganography</h3>
+            <p>Phase coding embeds data in the phase spectrum of an audio signal, making it nearly impossible to detect.</p>
+        </div>
+
+        <div class="encryption-box">
+            <i class="fas fa-code"></i>
+            <h3>🔄 Spread Spectrum Encoding</h3>
+            <p>Uses frequency modulation to distribute the hidden message across multiple frequency channels.</p>
+        </div>
+
+        <div class="encryption-box">
+            <i class="fas fa-user-shield"></i>
+            <h3>🛡 Privacy-Preserving Cryptography</h3>
+            <p>Ensures that even if steganographic data is detected, it remains unreadable without the encryption key.</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const canvas = document.getElementById("backgroundCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let w, h;
+    function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Particle System
+    const particles = [];
+    const shootingStars = [];
+
+    function createParticles(count) {
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                radius: Math.random() * 3 + 1,
+                dx: (Math.random() - 0.5) * 2,
+                dy: (Math.random() - 0.5) * 2,
+                color: `hsl(${Math.random() * 360}, 100%, 70%)`
+            });
+        }
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw and Move Particles
+        particles.forEach((p, index) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.dx;
+            p.y += p.dy;
+
+            if (p.x < 0 || p.x > w) p.dx *= -1;
+            if (p.y < 0 || p.y > h) p.dy *= -1;
+
+            // Neon Lines Between Close Particles
+            for (let j = index + 1; j < particles.length; j++) {
+                let p2 = particles[j];
+                let distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = `rgba(0, 255, 238, ${1 - distance / 100})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        });
+
+        // Shooting Stars
+        if (Math.random() < 0.02) {
+            shootingStars.push({
+                x: Math.random() * w,
+                y: Math.random() * h / 2,
+                speed: Math.random() * 4 + 2
+            });
+        }
+        for (let i = 0; i < shootingStars.length; i++) {
+            let s = shootingStars[i];
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y);
+            ctx.lineTo(s.x + 10, s.y + 10);
+            ctx.strokeStyle = "rgba(255, 255, 0, 0.8)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            s.x += s.speed;
+            s.y += s.speed;
+            if (s.x > w || s.y > h) shootingStars.splice(i, 1);
+        }
+
+        requestAnimationFrame(drawParticles);
+    }
+
+    createParticles(80);
+    drawParticles();
+});
+
+    </script>
+
+    <script>
+        // Scroll-triggered animation for encryption methods
+        document.addEventListener("DOMContentLoaded", function () {
+            const sections = document.querySelectorAll(".encryption-box");
+
+            function revealOnScroll() {
+                sections.forEach((box) => {
+                    const rect = box.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 50) {
+                        box.classList.add("show");
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", revealOnScroll);
+            revealOnScroll();
+        });
+    </script>
+
+    <footer>
+        <p>© 2025 StegoWave. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

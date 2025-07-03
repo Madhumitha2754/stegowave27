@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Support - StegoWave</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @keyframes floatEffect {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes glowEffect {
+            0% { box-shadow: 0px 0px 10px rgba(0, 255, 238, 0.5); }
+            50% { box-shadow: 0px 0px 20px rgba(0, 255, 238, 0.8); }
+            100% { box-shadow: 0px 0px 10px rgba(0, 255, 238, 0.5); }
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #0a0a0a;
+            color: #00ffee;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Full-Screen Animated Background */
+        #backgroundCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(10,10,10,1) 40%, rgba(0, 0, 0, 1) 100%);
+        }
+
+        .support-container {
+            max-width: 600px;
+            padding: 25px;
+            background: rgba(0, 255, 238, 0.1);
+            border-radius: 10px;
+            margin: 50px auto;
+            animation: floatEffect 3s infinite ease-in-out, glowEffect 2s infinite alternate;
+            text-align: left;
+            border: 2px solid #00ffee;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #FFD700;
+            animation: glowText 2s infinite alternate;
+        }
+
+        @keyframes glowText {
+            0% { text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.6); }
+            50% { text-shadow: 0px 0px 20px rgba(255, 215, 0, 1); }
+            100% { text-shadow: 0px 0px 10px rgba(255, 217, 0, 0.836); }
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #00ffee;
+            background: #222;
+            color: #00ffee;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: #00ffee;
+            color: #111;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .submit-btn:hover {
+            background: #009999;
+            transform: scale(1.05);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #111;
+            border-bottom: 2px solid #00ffee;
+        }
+
+        nav h1 {
+            color: #00ffee;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: #00ffee;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #111;
+            color: #00ffee;
+            margin-top: 50px;
+            border-top: 2px solid #00ffee;
+        }
+    </style>
+</head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+const canvas = document.getElementById("backgroundCanvas");
+const ctx = canvas.getContext("2d");
+
+let w, h;
+function resizeCanvas() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+// Particle System
+const particles = [];
+const shootingStars = [];
+
+function createParticles(count) {
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            radius: Math.random() * 3 + 1,
+            dx: (Math.random() - 0.5) * 2,
+            dy: (Math.random() - 0.5) * 2,
+            color: `hsl(${Math.random() * 360}, 100%, 70%)`
+        });
+    }
+}
+
+function drawParticles() {
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw and Move Particles
+    particles.forEach((p, index) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
+
+        // Neon Lines Between Close Particles
+        for (let j = index + 1; j < particles.length; j++) {
+            let p2 = particles[j];
+            let distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (distance < 100) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(0, 255, 238, ${1 - distance / 100})`;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+            }
+        }
+    });
+
+    // Shooting Stars
+    if (Math.random() < 0.02) {
+        shootingStars.push({
+            x: Math.random() * w,
+            y: Math.random() * h / 2,
+            speed: Math.random() * 4 + 2
+        });
+    }
+    for (let i = 0; i < shootingStars.length; i++) {
+        let s = shootingStars[i];
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x + 10, s.y + 10);
+        ctx.strokeStyle = "rgba(255, 255, 0, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        s.x += s.speed;
+        s.y += s.speed;
+        if (s.x > w || s.y > h) shootingStars.splice(i, 1);
+    }
+
+    requestAnimationFrame(drawParticles);
+}
+
+createParticles(80);
+drawParticles();
+});
+
+</script>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <nav>
+        <h1 class="glitch">🔊 StegoWave</h1>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="support.html">Contact us</a></li>
+        </ul>
+    </nav>
+    <h2>🔧 Get Technical Support</h2>
+    <p>Having issues? Fill out the form below and we’ll assist you.</p>
+    
+    <div class="support-container">
+        <form action="#" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="issue">Describe your issue:</label>
+            <textarea id="issue" name="issue" rows="5" required></textarea>
+            
+            <button type="submit" class="submit-btn">Submit Request</button>
+        </form>
+    </div>
+    
+    <footer>
+        <p>© 2025 StegoWave. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
